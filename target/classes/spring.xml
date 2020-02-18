@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="student" class="com.hyx.spring_hyx.bean.Student" scope="singleton">
+        <property name="id" value="1"></property>
+        <property name="name" value="张1"></property>
+        <property name="gender" value="男"></property>
+        <property name="hobby" value="读书，篮球，跑步"></property>
+        <property name="address" ref="address"></property>
+        <property name="list">
+            <list>
+                <ref bean="address"></ref>
+                <bean id="address" class="com.hyx.spring_hyx.bean.Address">
+                    <property name="province" value="天津1"></property>
+                    <property name="city" value="蓟县1"></property>
+                    <property name="county" value="侯家营1"></property>
+                </bean>
+            </list>
+        </property>
+        <property name="map">
+            <props>
+                <prop key="aaa">aaa</prop>
+                <prop key="bbb">222</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="address" class="com.hyx.spring_hyx.bean.Address">
+        <property name="province" value="天津"></property>
+        <property name="city" value="蓟县"></property>
+        <property name="county" value="侯家营"></property>
+    </bean>
+
+
+<!--    如果想实现Java文件的抽象类，不需要将当前bean实例化的话，可以使用abstract属性-->
+    <bean id="person1" class="com.hyx.spring_hyx.bean.Student" abstract="true">
+        <property name="id" value="1"></property>
+        <property name="name" value="张1"></property>
+        <property name="gender" value="男"></property>
+        <property name="hobby" value="读书，篮球，跑步"></property>
+        <property name="address" ref="address"></property>
+    </bean>
+    <!--parent:指定bean的配置信息继承于哪个bean-->
+    <bean id="person2" class="com.hyx.spring_hyx.bean.Student" parent="person1">
+        <property name="name" value="张2"></property>
+    </bean>
+
+
+<!--    静态工厂-->
+    <bean id="studentS" class="com.hyx.spring_hyx.factory.StudentStaticFactory" factory-method="getStudent">
+        <constructor-arg name="name" value="静态工厂"></constructor-arg>
+    </bean>
+<!--    实例工厂-->
+    <bean id="InstanceFactory" class="com.hyx.spring_hyx.factory.StudentInstanceFactory"></bean>
+    <bean id="studentI" class="com.hyx.spring_hyx.bean.Student" factory-bean="InstanceFactory" factory-method="getStudent">
+        <constructor-arg name="name" value="实例工厂"></constructor-arg>
+    </bean>
+
+<!--    <bean id="initdestory" class="com.hyx.spring_hyx.bean.Address" init-method="init" destroy-method="destory">-->
+<!--        <property name="province" value="燕郊"></property>-->
+<!--    </bean>-->
+
+<!--    <bean id="hyx_BeanPostProcessor" class="com.hyx.spring_hyx.BeanPostProcessor.BeanPostProcessor_hyx"></bean>-->
+
+
+<!--    FactoryBean-->
+    <bean id="myFactoryBean" class="com.hyx.spring_hyx.factory.StudentFactoryBean"></bean>
+
+    <context:component-scan base-package="spring_aop"></context:component-scan>
+    <!--开启aop的注解功能-->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+</beans>
